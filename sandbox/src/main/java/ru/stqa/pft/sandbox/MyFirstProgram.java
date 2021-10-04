@@ -7,7 +7,7 @@ public class MyFirstProgram {
         System.out.println("Hello world");
         Point o = new Point(-1,-1);
         Point l = new Point(1,1);
-        System.out.println("Расстояние между точками с координатами "+"("+o.x+","+o.y+")"+" и "+"("+l.x+","+l.y+")"+" равно "+o.distance(o,l));
+        System.out.println("Расстояние между точками с координатами "+"("+o.x+","+o.y+")"+" и "+"("+l.x+","+l.y+")"+" равно "+o.distance(l));
 
     }
 
