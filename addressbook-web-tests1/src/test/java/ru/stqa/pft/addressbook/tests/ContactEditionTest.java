@@ -1,9 +1,7 @@
 package ru.stqa.pft.addressbook.tests;
 
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
-
-import static org.testng.Assert.*;
 
 public class ContactEditionTest extends TestBase {
 
@@ -11,7 +9,7 @@ public class ContactEditionTest extends TestBase {
 
 
     @Test
-    public void testContactDeletion() throws Exception {
+    public void testContactEdition() throws Exception {
         app.goToHomePage();
         app.acceptNextAlert = true;
         app.getContactHelper().selectContact();

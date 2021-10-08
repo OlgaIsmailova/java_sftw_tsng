@@ -19,6 +19,10 @@ public class GroupHelper extends HelperBase {
         click(By.name("submit"));
     }
 
+    public void submitGroupEdition() {
+        click(By.name("update"));
+    }
+
     public void fillGroupForm(GroupData groupData) {
         type(By.name("group_name"), groupData.getName());
         type(By.name("group_header"), groupData.getHeader());
@@ -31,6 +35,10 @@ public class GroupHelper extends HelperBase {
 
     public void deleteSelectedGroups() {
         click(By.name("delete"));
+    }
+
+    public void editSelectedGroups() {
+        click(By.xpath("//div[@id='content']/form/input[6]"));
     }
 
     public void selectGroup() {
