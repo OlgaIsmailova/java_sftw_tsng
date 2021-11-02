@@ -2,6 +2,7 @@ package ru.stqa.pft.addressbook.tests;
 
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.appmanager.HelperBase;
 import ru.stqa.pft.addressbook.model.ContactData;
@@ -13,32 +14,34 @@ import static org.testng.Assert.assertEquals;
 
 public class ContactEditionTest extends TestBase {
 
-
+    @BeforeMethod
+    public void ensurePreconditions() {
+        app.goTo().homePage();
+        app.acceptNextAlert = true;
+        HelperBase helperBase = new HelperBase(app.getWd());
+        if (app.contact().list().size() == 0) {
+            app.contact().create(new ContactData().withFirstName("FN Test2").withLastName("LN Test2").withAddress("Address Line Test2").withPhone("147258").withEmail("test2@test2.com"));
+        }
+        app.goTo().homePage();
+    }
 
 
     @Test
     public void testContactEdition() throws Exception {
-        app.goToHomePage();
-        app.acceptNextAlert = true;
-        HelperBase helperBase = new HelperBase(app.getWd());
-        if (! helperBase.isElementPresent(By.name("selected[]"))) {
-            app.getContactHelper().createContact(new ContactData("FN Test2", "LN Test2", "Address Line Test2", "147258", "test2@test2.com"));
-        }
-        List<ContactData> before = app.getContactHelper().getContactList();
-        app.getContactHelper().selectContact(before.size() - 1);
-        app.getContactHelper().editSelectedContact();
-        ContactData contact = new ContactData(before.get(before.size()-1).getId(), "New fn", "New ln", "!!Address Line Test2", "!!147258", "!!test2@test2.com");
-        app.getContactHelper().fillContactPage(contact);
-        app.getContactHelper().submitContactUpdate();
-        app.goToHomePage();
-        List<ContactData> after = app.getContactHelper().getContactList();
+        List<ContactData> before = app.contact().list();
+        int index = before.size() - 1;
+        ContactData contact = new ContactData().withId(before.get(index).getId()).withFirstName("New fn").withLastName("New ln").withAddress("!!Address Line Test2").withPhone("!!147258").withEmail("!!test2@test2.com");
+        app.contact().modify(index, contact);
+        app.goTo().homePage();
+        List<ContactData> after = app.contact().list();
         assertEquals(after.size(), before.size());
 
 
-        before.remove(before.size()-1);
+        before.remove(index);
         before.add(contact);
         Assert.assertEquals(new HashSet<>(before), new HashSet<>(after));
     }
 
 
-}
+    }
+

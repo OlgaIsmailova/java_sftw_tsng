@@ -9,6 +9,8 @@ import ru.stqa.pft.addressbook.model.GroupData;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.testng.Assert.assertTrue;
+
 public class ContactHelper extends HelperBase {
 
     public ContactHelper(WebDriver wd) {
@@ -50,26 +52,37 @@ public class ContactHelper extends HelperBase {
         wd.findElements(By.name("selected[]")).get(index).click();
     }
 
-    public void createContact (ContactData contact)
+    public void create(ContactData contact)
     {
         newContactLink();
         fillContactPage(contact);
         submitContactCreation();
     }
 
+    public void modify(int index, ContactData contact) {
+        selectContact(index);
+        editSelectedContact();
+        fillContactPage(contact);
+        submitContactUpdate();
+    }
+
+    public void delete(int index) {
+        selectContact(index);
+        deleteSelectedContact();
+    }
+
     public int getContactCount() {
         return wd.findElements(By.name("selected[]")).size();
     }
 
-    public List<ContactData> getContactList() {
+    public List<ContactData> list() {
         List<ContactData> contacts = new ArrayList<ContactData>();
         List<WebElement> elements = wd.findElements(By.name("entry"));
         for (WebElement element : elements) {
             String lastName = element.findElement(By.cssSelector(":nth-child(2)")).getText();
             String firstName = element.findElement(By.cssSelector(":nth-child(3)")).getText();
             int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value"));
-            ContactData contact = new ContactData(id, firstName, lastName, null, null, null);
-            contacts.add(contact);
+            contacts.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName));
         }
         return contacts;
     }
