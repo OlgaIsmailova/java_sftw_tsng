@@ -4,12 +4,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import ru.stqa.pft.addressbook.model.ContactData;
-import ru.stqa.pft.addressbook.model.GroupData;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static org.testng.Assert.assertTrue;
 
 public class ContactHelper extends HelperBase {
 
@@ -48,8 +47,9 @@ public class ContactHelper extends HelperBase {
         click(By.xpath("//img[@alt='Edit']"));
     }
 
-    public void selectContact(int index) {
-        wd.findElements(By.name("selected[]")).get(index).click();
+
+    private void selectContactById(int id) {
+        wd.findElement(By.cssSelector("input[value='" + id + "']")).click();
     }
 
     public void create(ContactData contact)
@@ -59,24 +59,28 @@ public class ContactHelper extends HelperBase {
         submitContactCreation();
     }
 
-    public void modify(int index, ContactData contact) {
-        selectContact(index);
+    public void modify(ContactData contact) {
+        selectContactById(contact.getId());
         editSelectedContact();
         fillContactPage(contact);
         submitContactUpdate();
     }
 
-    public void delete(int index) {
-        selectContact(index);
+
+    public void delete(ContactData contact) {
+        selectContactById(contact.getId());
         deleteSelectedContact();
     }
+
+
 
     public int getContactCount() {
         return wd.findElements(By.name("selected[]")).size();
     }
 
-    public List<ContactData> list() {
-        List<ContactData> contacts = new ArrayList<ContactData>();
+
+    public Set<ContactData> all() {
+        Set<ContactData> contacts = new HashSet<ContactData>();
         List<WebElement> elements = wd.findElements(By.name("entry"));
         for (WebElement element : elements) {
             String lastName = element.findElement(By.cssSelector(":nth-child(2)")).getText();
@@ -86,4 +90,6 @@ public class ContactHelper extends HelperBase {
         }
         return contacts;
     }
+
+
 }
